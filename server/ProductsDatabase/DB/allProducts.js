@@ -21,16 +21,17 @@ const Product = db.define('product', {
   },
   default_price: {
     type: Sequelize.STRING
-  },
-  createdAt: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-  updatedAt: {
-    type: Sequelize.STRING,
-    allowNull: true
   }
-});
+}, {timestamps: false});
+
+const RelatedProduct = db.define('relatedProduct', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true
+  }
+}, {timestamps: false})
+
+Product.belongsToMany(Product, { as: 'relatedProducts', through: RelatedProduct });
 
 const Feature = db.define('feature', {
   id: {
@@ -44,16 +45,8 @@ const Feature = db.define('feature', {
   value: {
     type: Sequelize.STRING,
     allowNull: true
-  },
-  createdAt: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-  updatedAt: {
-    type: Sequelize.STRING,
-    allowNull: true
   }
-});
+}, {timestamps: false});
 
 Feature.belongsTo(Product);
 
@@ -73,15 +66,10 @@ const Style = db.define('style', {
     type: Sequelize.STRING,
     allowNull: true
   },
-  createdAt: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-  updatedAt: {
-    type: Sequelize.STRING,
-    allowNull: true
+  default_style: {
+    type: Sequelize.INTEGER
   }
-});
+}, {timestamps: false});
 
 Style.belongsTo(Product);
 
@@ -95,16 +83,8 @@ const Sku = db.define('sku', {
   },
   quantity: {
     type: Sequelize.INTEGER
-  },
-  createdAt: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-  updatedAt: {
-    type: Sequelize.STRING,
-    allowNull: true
   }
-});
+}, {timestamps: false});
 
 Sku.belongsTo(Style);
 
@@ -118,20 +98,12 @@ const Photo = db.define('photo', {
   },
   thumbnail_url: {
     type: Sequelize.STRING
-  },
-  createdAt: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-  updatedAt: {
-    type: Sequelize.STRING,
-    allowNull: true
   }
-});
+}, {timestamps: false});
 
 Photo.belongsTo(Style);
 
-module.exports = { Product, Feature, Style, Sku, Photo };
+module.exports = { Product, Feature,  Style, Sku, Photo, RelatedProduct };
 
 
 

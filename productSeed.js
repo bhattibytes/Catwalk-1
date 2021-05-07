@@ -1,11 +1,12 @@
 // const database = require('./server/ProductsDatabase/DB/database.js');
-// const { Product, Feature, Style, Sku, Photo } = require('./server/ProductsDatabase/DB/allProducts.js');
+// const { Product, Feature,  Style, Sku, Photo, RelatedProduct } = require('./server/ProductsDatabase/DB/allProducts.js');
 
 // var Products = [];
 // var Features = [];
 // var Styles = [];
 // var Skus = [];
 // var Photos = [];
+// var RelatedProducts = [];
 
 
 // const seed = async () => {
@@ -24,6 +25,9 @@
 //     }));
 //     await Promise.all(Photos.map(photo => {
 //       return Photo.create(photo);
+//     }));
+//     await Promise.all(RelatedProducts.map(relatedProduct => {
+//       return RelatedProduct.create(relatedProduct);
 //     }));
 
 //   console.log('Seeding success!')
