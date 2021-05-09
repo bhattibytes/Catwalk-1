@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "build": "npx webpack -w",
-    "start": "nodemon server",
+    "start": "nodemon server/ProductsDatabase/server.js",
     "test": "jest",
     "test:watch": "jest --watchAll --verbose",
     "test:coverage": "jest --verbose --coverage",
