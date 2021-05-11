@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('./database.js');
 
-
 const Product = db.define('product', {
   id: {
     type: Sequelize.INTEGER,
@@ -28,10 +27,14 @@ const RelatedProduct = db.define('relatedProduct', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true
+  },
+  currentProductId: {
+    type: Sequelize.INTEGER
+  },
+  relatedProductId: {
+    type: Sequelize.INTEGER
   }
-}, {timestamps: false})
-
-Product.belongsToMany(Product, { as: 'relatedProducts', through: RelatedProduct });
+}, { timestamps: false });
 
 const Feature = db.define('feature', {
   id: {
@@ -46,7 +49,11 @@ const Feature = db.define('feature', {
     type: Sequelize.STRING,
     allowNull: true
   }
-}, {timestamps: false});
+},
+  {
+    indexes: [{ unique: false, using: 'BTREE', fields: ['productId'] }],
+    timestamps: false
+  });
 
 Feature.belongsTo(Product);
 
@@ -69,7 +76,11 @@ const Style = db.define('style', {
   default_style: {
     type: Sequelize.INTEGER
   }
-}, {timestamps: false});
+},
+  {
+    indexes: [{ unique: false, using: 'BTREE', fields: ['productId'] }],
+    timestamps: false
+  });
 
 Style.belongsTo(Product);
 
@@ -84,7 +95,11 @@ const Sku = db.define('sku', {
   quantity: {
     type: Sequelize.INTEGER
   }
-}, {timestamps: false});
+},
+  {
+    indexes: [{ unique: false, using: 'BTREE', fields: ['styleId'] }],
+    timestamps: false
+  });
 
 Sku.belongsTo(Style);
 
@@ -99,12 +114,19 @@ const Photo = db.define('photo', {
   thumbnail_url: {
     type: Sequelize.STRING
   }
-}, {timestamps: false});
+},
+  {
+    indexes: [{ unique: false, using: 'BTREE', fields: ['styleId'] }],
+    timestamps: false
+  });
 
 Photo.belongsTo(Style);
 
+Product.sync();
+Style.sync();
+Photo.sync();
+Sku.sync();
+Feature.sync();
+RelatedProduct.sync();
+
 module.exports = { Product, Feature,  Style, Sku, Photo, RelatedProduct };
-
-
-
-

@@ -71,6 +71,10 @@ const getAllProductStyles = async (req, res) => {
         if (style === styles[styles.length -1]) {
           res.status(200).send(response);
         }
+      }).catch(err => {
+        if (err) {
+          console.log('There was an error in the promise-->', err)
+        }
       })
     }
   })
