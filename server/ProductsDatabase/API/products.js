@@ -40,38 +40,42 @@ const getProductById = (req, res) => {
 const getAllProductStyles = async (req, res) => {
   var id = req.params.product_id;
   var response = {};
-  var styleIds = [];
+  response.product_id = id;
   var stylesArr = [];
-  var styles = Style.findAll({ attributes: ["id", "name", "original_price", "sale_price", "default_style"], where: { 'productId': id } }).then(data => {
-    data.forEach(style => {
-      styleIds.push(style.dataValues.id);
-      stylesArr.push(style.dataValues);
-    })
-    styleIds.forEach(styleId => {
-      Photo.findAll({ attributes: ["fullsize_url", "thumbnail_url"], where: { 'styleId': styleId } })
-      .then(photos => {
-        var photoArr = [];
-        photos.forEach(photo => {
-          photoArr.push({fullsize_url: photo.fullsize_url, thumbnail_url: photo.thumbnail_url})
+  await Style.findAll({ attributes: ["id", "name", "original_price", "sale_price", "default_style"], where: { 'productId': id } }).then(async styles => {
+      for (var i = 0; i < styles.length; i++) {
+      var style = styles[i];
+      await Photo.findAll({ attributes: ["fullsize_url", "thumbnail_url"], where: { 'styleId': style.dataValues.id } }).then(async photosArr => {
+        var anotherArr = [];
+        await photosArr.forEach(photo => {
+          anotherArr.push(photo.dataValues);
         })
-        console.log('Here should be the Arr', photoArr)
-        stylesArr.map(style => {
-          if (style.id === styleId) {
-            style.photos = photoArr
-          }
+        return anotherArr;
+      }).then(anotherArr => {
+        style.dataValues.photos = anotherArr
+        return style
+      }).then(async style => {
+        var skusObj = {};
+        await Sku.findAll({ attributes: ["size", "quantity", "id"], where: { 'styleId': style.dataValues.id } }).then(async skus => {
+          await skus.forEach(sku => {
+            skusObj[sku.dataValues.id] = {size: sku.dataValues.size, quantity: sku.dataValues.quantity}
+          })
         })
-        console.log('Here is the stylesArr after putting in photosArr ---> ', stylesArr)
+        style.dataValues.skus = skusObj;
+        stylesArr.push(style);
+        return stylesArr
+      }).then(stylesArr => {
+        response.results = stylesArr
+        return response
+      }).then(response => {
+        if (style === styles[styles.length -1]) {
+          res.status(200).send(response);
+        }
       })
-    })
-    response.product_id = id;
-    response.results = stylesArr;
-    console.log('Here is the response object --->', response)
-    res.status(200).send(response);
+    }
   })
 }
 
-  // Sku.findAll({ attributes: ["id", "size", "quantity"], where: { 'styleId': styleId } })
-    //   .then(skus )
 const getRelatedProducts = (req, res) => {
   return null
 };
