@@ -21,9 +21,9 @@ app.get('/products/:product_id/styles', async (req, res) => {
   await getAllProductStyles(req, res);
 })
 
-// app.get('/products/:product_id/related', async (req, res) => {
-//   await getRelatedProducts(req, res);
-// })
+app.get('/products/:product_id/related', async (req, res) => {
+  await getRelatedProducts(req, res);
+})
 
 app.listen(PORT, () => {
   console.log(`Server listening at localhost:${PORT}!`);

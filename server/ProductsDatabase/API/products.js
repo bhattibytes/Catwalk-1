@@ -80,8 +80,24 @@ const getAllProductStyles = async (req, res) => {
   })
 }
 
-const getRelatedProducts = (req, res) => {
-  return null
+const getRelatedProducts = async (req, res) => {
+  var id = req.params.product_id;
+  var response = [];
+  await RelatedProduct.findAll({ attributes: ["relatedProductId"], where: { 'currentProductId': id } })
+    .then(async related => {
+      await related.forEach(relId => {
+        response.push(relId.dataValues.relatedProductId)
+      });
+      return response;
+    })
+    .then(response => {
+      res.status(200).send(response);
+    })
+    .catch(err => {
+      if (err) {
+        console.log('There was an error--->', err)
+      }
+    });
 };
 
 module.exports = { getAllProducts, getProductById, getAllProductStyles, getRelatedProducts };

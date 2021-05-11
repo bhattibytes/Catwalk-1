@@ -34,7 +34,10 @@ const RelatedProduct = db.define('relatedProduct', {
   relatedProductId: {
     type: Sequelize.INTEGER
   }
-}, { timestamps: false });
+}, {
+  indexes: [{ unique: false, using: 'BTREE', fields: ['relatedProductId'] }],
+  timestamps: false
+});
 
 const Feature = db.define('feature', {
   id: {
@@ -122,11 +125,11 @@ const Photo = db.define('photo', {
 
 Photo.belongsTo(Style);
 
-Product.sync();
-Style.sync();
-Photo.sync();
-Sku.sync();
-Feature.sync();
-RelatedProduct.sync();
+// Product.sync();
+// Style.sync();
+// Photo.sync();
+// Sku.sync();
+// Feature.sync();
+// RelatedProduct.sync();
 
 module.exports = { Product, Feature,  Style, Sku, Photo, RelatedProduct };
